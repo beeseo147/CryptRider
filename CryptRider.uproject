@@ -1,13 +1,16 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{D92FE913-4885-369B-EE17-B189B10A0A0E}",
+	"EngineAssociation": "{CB5A73D3-4913-B96E-D061-F3A9D32F92F4}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "CryptRider",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
