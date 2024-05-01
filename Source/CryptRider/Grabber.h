@@ -36,7 +36,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 200;
 
-	UPhysicsHandleComponent* GetPhsicsHandle();
+	UPhysicsHandleComponent* GetPhysicsHandle() const;
 	bool GetGrabbableInReach(FHitResult& OutHitResult)const;
 
 public:
@@ -45,4 +45,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Grab();
+
+
 };

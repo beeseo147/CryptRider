@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
+#include "Mover.h"
 #include "TriggerComponent.generated.h"
 
 /**
@@ -14,11 +15,26 @@ class CRYPTRIDER_API UTriggerComponent : public UBoxComponent
 {
 	GENERATED_BODY()
 	
+public:
+	UTriggerComponent();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetMover(UMover* NewMover);
+
+private:
+	AActor* GetAcceptableActor() const;
+private:
+	UPROPERTY(EditAnywhere)
+	FName AcceptableActorTag;
+
+	UMover* Mover;
 
 };
