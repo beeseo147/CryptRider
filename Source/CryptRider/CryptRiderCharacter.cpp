@@ -74,7 +74,7 @@ void ACryptRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Look);
 
-		EnhancedInputComponent->BindAction()
+		EnhancedInputComponent->BindAction(GrabAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Look);
 	}
 	else
 	{

@@ -11,7 +11,7 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	PrimaryComponentTick.TickInterval = 0.f;
 	// ...
 }
 
@@ -53,7 +53,9 @@ void UGrabber::Release()
 
 	if (PhysicsHandle && PhysicsHandle->GetGrabbedComponent())
 	{
+
 		PhysicsHandle->GetGrabbedComponent()->GetOwner()->Tags.Remove("Grabbed");
+		PhysicsHandle->GetGrabbedComponent()->SetEnableGravity(true);
 		PhysicsHandle->ReleaseComponent();
 	}
 
@@ -73,6 +75,7 @@ void UGrabber::Grab()
 	{
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 		HitComponent->SetSimulatePhysics(true);
+		HitComponent->SetEnableGravity(false);
 		HitComponent->WakeAllRigidBodies();
 		AActor* HitActor = HitResult.GetActor();
 		if (!HitActor->Tags.Contains("Grabbed"))
