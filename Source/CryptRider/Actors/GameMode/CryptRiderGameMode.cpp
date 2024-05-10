@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "CryptRiderGameMode.h"
-#include "CryptRiderCharacter.h"
+#include "CryptRider/Actors/Charter/CryptRiderCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 ACryptRiderGameMode::ACryptRiderGameMode()
