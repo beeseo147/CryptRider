@@ -5,17 +5,19 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
-#include "Actors/Controller/CryptRiderPlayerController.h
-
+#include "Data/Item/ItemInventory.h"
+#include "Actors/Controller/CryptRiderPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Controller.h"
+#include "UI/InventoryMenuUserWidget.h"
+#include "Data/Item/ItemData.h"
+#include "Data/Item/ItemInventory.h"
 // Sets default values for this component's properties
 UInventory::UInventory()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
-	InventorySlots.SetNum(InventoryCount);
-	
 }
 
 // Called when the game starts
@@ -24,7 +26,10 @@ void UInventory::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	InventorySlots.SetNum(InventoryCount);
+	//ACryptRiderPlayerController ThisController;
+	//InventoryMenuWidgetRef = Cast< ACryptRiderPlayerController>(UGameplayStatics::GetPlayerController(this, 0))->InventoryMenuWidget;
+
 }
 
 
@@ -34,5 +39,56 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+bool UInventory::AddItem(FInventoryItem &InItem)
+{
+	LocalItem = InItem;
+	LocalAmount = InItem.Amount;
+	
+	//LocalMaxAmountStack = InItem.Item.GetClass()->
+
+	if (LocalMaxAmountStack > 1)
+	{
+		CheckFreeSlot(InItem);
+
+	}
+	else
+	{
+		if (CheckFreeSlot(InItem))
+		{
+			InventorySlots.Insert(InItem, LocalIndex);
+			UpdateInventorySlot(LocalIndex);
+
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("NoFreeSlot {}"));
+			ReMainder = 0;
+			return false;
+		}
+	}
+	return false;
+}
+
+bool UInventory::CheckFreeSlot(FInventoryItem& InItem)
+{
+	bool LocalSucess = false;
+	for (int i=0;i<InventorySlots.Num();i++)
+	{
+		if (UKismetSystemLibrary::IsValid(InventorySlots[i].Item))
+		{
+			LocalIndex = i;
+			LocalSucess = true;
+		}
+	}
+
+	return LocalSucess;
+}
+
+void UInventory::UpdateInventorySlot(int32 Index)
+{
+	InventoryMenuWidgetRef;
+	//일단 해당 번호의 인덱스에 접근으로..
 }
 

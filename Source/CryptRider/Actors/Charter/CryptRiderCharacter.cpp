@@ -13,11 +13,13 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Controller/CryptRiderPlayerController.h"
+#include "UI/InventoryMenuUserWidget.h"
+#include "UI/MainMenu.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
-//////////////////////////////////////////////////////////////////////////
-// ACryptRiderCharacter
+////////////////////////////////////////////////////////////////////////
 
 ACryptRiderCharacter::ACryptRiderCharacter()
 {
@@ -202,19 +204,23 @@ void ACryptRiderCharacter::Inventory(const FInputActionValue& Value)
 	if (BPaused)
 	{
 		GetCharacterMovement()->DisableMovement();
-		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		ACryptRiderPlayerController* PlayerController = Cast<ACryptRiderPlayerController>(GetController());
 		PlayerController->SetShowMouseCursor(true);
 
 		//이후로는 위젯
+		PlayerController->InventoryMenuWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		PlayerController->SetInputMode(FInputModeGameAndUI());
 	}
 	else 
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		ACryptRiderPlayerController* PlayerController = Cast<ACryptRiderPlayerController>(GetController());
 		PlayerController->ResetIgnoreLookInput();
 		PlayerController->SetShowMouseCursor(false);
 
 		//이후로는 위젯
+		PlayerController->InventoryMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
+		PlayerController->SetInputMode(FInputModeGameOnly());
 	}
 }
 

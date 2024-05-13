@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "CryptRiderPlayerController.generated.h"
 
-class UInputMappingContext;
-
+class UInventoryMenuUserWidget;
 /**
  *
  */
@@ -18,14 +18,10 @@ class CRYPTRIDER_API ACryptRiderPlayerController : public APlayerController
 	
 protected:
 
-	/** Input Mapping Context to be used for player input */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputMappingContext* InputMappingContext;
-
-	// Begin Actor interface
-protected:
-
 	virtual void BeginPlay() override;
 
 	// End Actor interface
+public:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UInventoryMenuUserWidget* InventoryMenuWidget;
 };
