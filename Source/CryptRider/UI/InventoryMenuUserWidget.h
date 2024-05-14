@@ -15,16 +15,23 @@ class CRYPTRIDER_API UInventoryMenuUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
 	UUniformGridPanel* InventoryGrid;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
-	UUserWidget* InventoryDropDown;
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* InventorySlot;
+
+	/*UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
+	UUserWidget* InventoryDropDown;*/
+
+
 protected:
-	int32 SlotsPerRow = 4;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 SlotsPerRow = 8;
 
 };
 

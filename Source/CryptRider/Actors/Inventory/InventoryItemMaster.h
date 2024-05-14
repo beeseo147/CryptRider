@@ -22,6 +22,16 @@ protected:
 	virtual void PostRegisterAllComponents() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
+protected:
+	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "BaseMesh")
+	UStaticMeshComponent* BaseMesh;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "Prompt")
+	class UWidgetComponent* Prompt;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "Sphere")
+	class USphereComponent* Sphere;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -31,5 +41,4 @@ public:
 	FDataTableRowHandle InventoryData;
 
 	const FItemData* InventoryDataTableRow;
-	
 };

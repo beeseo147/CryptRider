@@ -5,19 +5,20 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Data/Item/ItemData.h"
-#include "Data/Item/ItemInventory.h"
+#include "Data/Item/InventoryItem.h"
 #include "Inventory.generated.h"
 
 
 struct FItemData;
 class UInventoryMenuUserWidget;
+class AInventoryItemMaster;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CRYPTRIDER_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
-
+	friend class UInventoryMenuUserWidget;
 public:	
 	// Sets default values for this component's properties
 	UInventory();
@@ -34,13 +35,13 @@ public:
 	int InventoryCount = 8;
 	
 	UPROPERTY(EditAnywhere)
-	TArray<FInventoryItem> InventorySlots;
+	TArray<FItemData> InventorySlots;
 
 	UPROPERTY(BlueprintReadWrite)
 	UInventoryMenuUserWidget* InventoryMenuWidgetRef = nullptr;
 
 	UPROPERTY(BlueprintReadOnly)
-	FInventoryItem LocalItem;
+	FItemData LocalItem;
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 LocalAmount;
@@ -55,7 +56,10 @@ public:
 	int32 ReMainder = 0;
 
 protected:
-	bool AddItem(FInventoryItem &InItem);
-	bool CheckFreeSlot(FInventoryItem& InItem);
+	bool AddItem(FItemData&InItem);
+	bool CheckFreeSlot(FItemData& InItem);
 	void UpdateInventorySlot(int32 Index);
+
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	FItemData GetItemIndex(int32 Index);
 };

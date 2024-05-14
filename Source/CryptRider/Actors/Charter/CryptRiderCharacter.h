@@ -12,9 +12,9 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+class UInventory;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
 class ACryptRiderCharacter : public ACharacter
@@ -69,6 +69,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ReturnAction;
 
+
 	/** Bool for AnimBP to switch to another animation set */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
@@ -92,7 +93,7 @@ protected:
 	void Grab(const FInputActionValue& Value);
 
 	/** Called for InventoryOpen input */
-	void Inventory(const FInputActionValue& Value);
+	void InventoryOpen(const FInputActionValue& Value);
 
 	/** Called for Pick input */
 	void Pick(const FInputActionValue& Value);

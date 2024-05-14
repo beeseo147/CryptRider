@@ -17,7 +17,7 @@
 #include "UI/InventoryMenuUserWidget.h"
 #include "UI/MainMenu.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -135,7 +135,7 @@ void ACryptRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(GrabAction, ETriggerEvent::Completed, this, &ACryptRiderCharacter::Grab);
 
 		//Inventory
-		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Inventory);
+		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &ACryptRiderCharacter::InventoryOpen);
 
 		//Pick
 		EnhancedInputComponent->BindAction(PickAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Pick);
@@ -145,7 +145,7 @@ void ACryptRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	}
 	else
 	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		ensure(EnhancedInputComponent);
 	}
 }
 
@@ -190,7 +190,7 @@ void ACryptRiderCharacter::Grab(const FInputActionValue& Value)
 	}
 }
 
-void ACryptRiderCharacter::Inventory(const FInputActionValue& Value)
+void ACryptRiderCharacter::InventoryOpen(const FInputActionValue& Value)
 {
 	bool InventoryOpen = Value.Get<bool>();
 	if (!BPaused)

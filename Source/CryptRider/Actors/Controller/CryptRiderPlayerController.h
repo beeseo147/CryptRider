@@ -8,6 +8,7 @@
 #include "CryptRiderPlayerController.generated.h"
 
 class UInventoryMenuUserWidget;
+class UMainMenu;
 /**
  *
  */
@@ -22,6 +23,9 @@ protected:
 
 	// End Actor interface
 public:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UMainMenu* UMainMenuWidget;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UInventoryMenuUserWidget* InventoryMenuWidget;
 };

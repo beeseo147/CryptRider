@@ -5,13 +5,14 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
-#include "Data/Item/ItemInventory.h"
+#include "Data/Item/InventoryItem.h"
 #include "Actors/Controller/CryptRiderPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Controller.h"
 #include "UI/InventoryMenuUserWidget.h"
 #include "Data/Item/ItemData.h"
-#include "Data/Item/ItemInventory.h"
+#include "Data/Item/InventoryItem.h"
+#include "Actors/Inventory/InventoryItemMaster.h"
 // Sets default values for this component's properties
 UInventory::UInventory()
 {
@@ -41,7 +42,7 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	// ...
 }
 
-bool UInventory::AddItem(FInventoryItem &InItem)
+bool UInventory::AddItem(FItemData&InItem)
 {
 	LocalItem = InItem;
 	LocalAmount = InItem.Amount;
@@ -71,12 +72,12 @@ bool UInventory::AddItem(FInventoryItem &InItem)
 	return false;
 }
 
-bool UInventory::CheckFreeSlot(FInventoryItem& InItem)
+bool UInventory::CheckFreeSlot(FItemData& InItem)
 {
 	bool LocalSucess = false;
 	for (int i=0;i<InventorySlots.Num();i++)
 	{
-		if (UKismetSystemLibrary::IsValid(InventorySlots[i].Item))
+		if (InventorySlots[i].ItemName!=TEXT(""))
 		{
 			LocalIndex = i;
 			LocalSucess = true;
@@ -90,5 +91,14 @@ void UInventory::UpdateInventorySlot(int32 Index)
 {
 	InventoryMenuWidgetRef;
 	//일단 해당 번호의 인덱스에 접근으로..
+
+}
+
+FItemData UInventory::GetItemIndex(int32 Index)
+{
+	LocalIndex = Index;
+	
+
+	return InventorySlots[Index];
 }
 

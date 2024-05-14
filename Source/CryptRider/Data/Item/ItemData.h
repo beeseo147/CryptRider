@@ -36,10 +36,6 @@ public:
 	bool BDrop;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BPickUp", MakeStructureDefaultValue = "None"))
-	TObjectPtr<UClass> BPickUp;
-
-	/** Please add a variable description */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Description"))
 	FText Description;
 
@@ -54,4 +50,8 @@ public:
 	/** Please add a variable description */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BExaminationMesh"))
 	bool BExaminationMesh;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Amount", MakeStructureDefaultValue = "0"))
+	int32 Amount;
+
 };

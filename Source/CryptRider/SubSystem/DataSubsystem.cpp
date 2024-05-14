@@ -3,7 +3,7 @@
 
 #include "SubSystem/DataSubsystem.h"
 #include "Data/Item/ItemData.h"
-#include "Data/Item/ItemInventory.h"
+#include "Data/Item/InventoryItem.h"
 
 UDataSubsystem::UDataSubsystem()
 {
@@ -13,9 +13,9 @@ UDataSubsystem::UDataSubsystem()
 		FItemDataTable = Asset.Object;
 	}
 	{
-		static ConstructorHelpers::FObjectFinder<UDataTable> Asset{ TEXT("/Script/Engine.DataTable'/Game/Actors/Inventory/DT_InventoryItem.DT_InventoryItem'") };
+		/*static ConstructorHelpers::FObjectFinder<UDataTable> Asset{ TEXT("/Script/Engine.DataTable'/Game/Actors/Inventory/DT_InventoryItem.DT_InventoryItem'") };
 		ensure(Asset.Object);
-		FInventoryDataTable = Asset.Object;
+		FInventoryDataTable = Asset.Object;*/
 	}
 }
 
@@ -26,9 +26,9 @@ const FItemData* UDataSubsystem::FindItemData(const FName& InKey)
 	return Row;
 }
 
-const FInventoryItem* UDataSubsystem::FindInventoryItem(const FName& InKey)
-{
-	FInventoryItem* Row = FInventoryDataTable->FindRow<FInventoryItem>(InKey, TEXT(""));
-	ensure(Row);
-	return Row;
-}
+//const FInventoryItem* UDataSubsystem::FindInventoryItem(const FItemData& InKey)
+//{
+//	FInventoryItem* Row = FInventoryDataTable->FindRow<FInventoryItem>(InKey.ItemName, TEXT(""));
+//	ensure(Row);
+//	return Row;
+//}
