@@ -56,10 +56,16 @@ public:
 	int32 ReMainder = 0;
 
 protected:
-	bool AddItem(FItemData&InItem);
+	UFUNCTION(BlueprintCallable)
+	bool AddItem(UPARAM(ref) FItemData&InItem);
+	UFUNCTION(BlueprintCallable)
 	bool CheckFreeSlot(FItemData& InItem);
+	UFUNCTION(BlueprintCallable)
 	void UpdateInventorySlot(int32 Index);
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	FItemData GetItemIndex(int32 Index);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckForEmptySlot();
 };

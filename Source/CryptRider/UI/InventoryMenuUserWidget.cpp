@@ -5,7 +5,7 @@
 
 void UInventoryMenuUserWidget::NativePreConstruct()
 {
-	Super::NativeConstruct();
+	Super::NativePreConstruct();
 
 }
 
@@ -17,13 +17,19 @@ void UInventoryMenuUserWidget::NativeConstruct()
 	UClass* InventoryItemWidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/Inventory/UI_InventorySlot.UI_InventorySlot_C'"));
 	int32 Col = 4;
 	int32 Row = SlotsPerRow / Col;
-	
+	int32 Index=0;
 	for (int32 i = 0; i < 2; i++)
 	{
 		for (int32 k = 0; k < Col; ++k)
 		{
-			InventorySlot = Cast< UUserWidget>(CreateWidget(this, InventoryItemWidgetClass));
-			InventoryGrid->AddChildToUniformGrid(InventorySlot,i, k);
+			UMySlotUserWidget * Widget = Cast<UMySlotUserWidget>(CreateWidget(this, InventoryItemWidgetClass));
+			InventoryGrid->AddChildToUniformGrid(Widget,i, k);
+			InventorySlots.Add(Widget);
 		}
 	}
+}
+
+UMySlotUserWidget* UInventoryMenuUserWidget::GetChildAt(int32 Index)
+{
+	return InventorySlots[Index];
 }

@@ -23,15 +23,23 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 protected:
-	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "BaseMesh")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowAbstract = true), Category = "BaseMesh")
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "Prompt")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowAbstract = true), Category = "Prompt")
 	class UWidgetComponent* Prompt;
 
-	UPROPERTY(VisibleAnywhere, meta = (AllowAbstract = true), Category = "Sphere")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,meta = (AllowAbstract = true), Category = "Sphere")
 	class USphereComponent* Sphere;
+public:
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "ItemDataLocation")
+	float PickUpDistance = 0.0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataLocation")
+	float WidgetDistanceAboutMesh = 0.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataLocation")
+	bool UpdateActor = false;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

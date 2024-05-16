@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/UniformGridPanel.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/MySlotUserWidget.h"
 #include "InventoryMenuUserWidget.generated.h"
 
 /**
@@ -23,11 +24,14 @@ public:
 	UUniformGridPanel* InventoryGrid;
 
 	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* InventorySlot;
+	TArray<UMySlotUserWidget*> InventorySlots;
 
 	/*UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
 	UUserWidget* InventoryDropDown;*/
-
+	/*UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyCategory")
+	void UpdateSlot(int Index);*/
+	UFUNCTION(BlueprintCallable)
+	UMySlotUserWidget* GetChildAt(int32 Index);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

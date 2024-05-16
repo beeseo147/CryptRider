@@ -43,6 +43,7 @@ void AInventoryItemMaster::PostRegisterAllComponents()
 void AInventoryItemMaster::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+	Prompt->SetRelativeLocation(FVector(0, 0, WidgetDistanceAboutMesh), false);
 }
 
 // Called when the game starts or when spawned
