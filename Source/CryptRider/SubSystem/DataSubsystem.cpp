@@ -12,11 +12,6 @@ UDataSubsystem::UDataSubsystem()
 		ensure(Asset.Object);
 		FItemDataTable = Asset.Object;
 	}
-	{
-		/*static ConstructorHelpers::FObjectFinder<UDataTable> Asset{ TEXT("/Script/Engine.DataTable'/Game/Actors/Inventory/DT_InventoryItem.DT_InventoryItem'") };
-		ensure(Asset.Object);
-		FInventoryDataTable = Asset.Object;*/
-	}
 }
 
 const FItemData* UDataSubsystem::FindItemData(const FName& InKey)

@@ -27,11 +27,11 @@ void AInventoryItemMaster::PreRegisterAllComponents()
 
 	if (InventoryData.IsNull()) { return; }
 	if (InventoryData.RowName == NAME_None) { return; }
-	const FItemData* Data = InventoryData.GetRow<FItemData>(TEXT(""));
+	FItemData* Data = InventoryData.GetRow<FItemData>(TEXT(""));
 	ensure(Data);
 	if (InventoryDataTableRow == Data) { return; }
 	InventoryDataTableRow = Data;
-
+	ItemAmount = InventoryDataTableRow->Amount;
 }
 
 void AInventoryItemMaster::PostRegisterAllComponents()
@@ -51,6 +51,11 @@ void AInventoryItemMaster::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AInventoryItemMaster::SetInventoryDataTableRow(FItemData* InItemData)
+{
+	InventoryDataTableRow = InItemData;
 }
 
 // Called every frame

@@ -7,12 +7,16 @@
 #include "GameFramework/Character.h"
 #include "Data/Item/InventoryItem.h"
 #include "Actors/Controller/CryptRiderPlayerController.h"
+#include "Actors/Charter/CryptRiderCharacter.h"
+#include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Controller.h"
 #include "UI/InventoryMenuUserWidget.h"
 #include "Data/Item/ItemData.h"
 #include "Data/Item/InventoryItem.h"
 #include "Actors/Inventory/InventoryItemMaster.h"
+
+
 // Sets default values for this component's properties
 UInventory::UInventory()
 {
@@ -30,7 +34,8 @@ void UInventory::BeginPlay()
 	InventorySlots.SetNum(InventoryCount);
 	//ACryptRiderPlayerController ThisController;
 	InventoryMenuWidgetRef = Cast< ACryptRiderPlayerController>(UGameplayStatics::GetPlayerController(this, 0))->InventoryMenuWidget;
-
+	PlayerRef = Cast< ACryptRiderCharacter>(UGameplayStatics::GetPlayerPawn(this,0));
+	
 }
 
 
@@ -47,7 +52,6 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 	LocalItem = InItem;
 	LocalAmount = InItem.Amount;
 	LocalMaxAmountStack = InItem.MaxStackAmount;
-
 	//Max 값이 1이상일때 고려
 	//왜냐면 1이면 그냥 채움됨
 
@@ -75,9 +79,9 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 			}
 			else
 			{
+				LocalItem.Amount -= InventorySlots[LocalIndex].MaxStackAmount -InventorySlots[LocalIndex].Amount;
 				InventorySlots[LocalIndex].Amount = LocalMaxAmountStack;
 				UpdateInventorySlot(LocalIndex);
-				LocalItem.Amount -= LocalMaxAmountStack;
 				AddItem(LocalItem);
 			}
 			
@@ -86,7 +90,7 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 		{
 			if (CheckForEmptySlot())
 			{
-				if (LocalMaxAmountStack >= (InventorySlots[LocalIndex].Amount + LocalItem.Amount))
+				if (LocalMaxAmountStack >=LocalItem.Amount)
 				{
 					InventorySlots[LocalIndex] = LocalItem;
 					UpdateInventorySlot(LocalIndex);
@@ -94,6 +98,7 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 				else
 				{
 					InventorySlots[LocalIndex] = LocalItem;
+					InventorySlots[LocalIndex].Amount = InventorySlots[LocalIndex].MaxStackAmount;
 					UpdateInventorySlot(LocalIndex);
 					LocalItem.Amount -= LocalMaxAmountStack;
 					AddItem(LocalItem);
@@ -111,12 +116,15 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 		if (CheckForEmptySlot())
 		{
 			InventorySlots[LocalIndex] = LocalItem;
+			InventorySlots[LocalIndex].Amount = 1;
+			LocalItem.Amount -= 1;
 			UpdateInventorySlot(LocalIndex);
+			ReMainder = LocalItem.Amount;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("NoFreeSlot {}"));
-			ReMainder = 0;
+			ReMainder = LocalItem.Amount;
 			return false;
 		}
 	}
@@ -146,6 +154,45 @@ void UInventory::UpdateInventorySlot(int32 Index)
 	T->UpdateSlot(Index);
 }
 
+void UInventory::UseItem(int32 Index)
+{
+	if (InventorySlots[Index].Amount > 1) {
+		InventorySlots[Index].Amount -= 1;
+		UpdateInventorySlot(Index);
+	}
+	else
+	{
+		InventorySlots[Index].Amount -= 1;
+		InventorySlots[Index].ItemName = NAME_None;
+		UpdateInventorySlot(Index);
+	}
+}
+
+void UInventory::DropItem(int32 Index)
+{
+	UCameraComponent* PlayerCamera = PlayerRef->GetFirstPersonCameraComponent();
+	FVector CameraLocation = PlayerCamera->GetComponentLocation();
+	FVector CameraVector = PlayerCamera->GetForwardVector();
+	FHitResult HitResult;
+	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraVector,
+		ETraceTypeQuery::TraceTypeQuery1, false,
+		TArray<class AActor*>(), EDrawDebugTrace::None, HitResult, true);
+
+	FTransform SpawnTransform = HitResult.bBlockingHit ? FTransform(HitResult.TraceEnd) : FTransform(HitResult.Location);
+
+	AInventoryItemMaster * SpawnedItem = GetWorld()->SpawnActorDeferred<AInventoryItemMaster>(LocalItem.ItemMasterClass.Get(),
+		SpawnTransform);
+	SpawnedItem->ItemAmount = InventorySlots[Index].Amount;
+	SpawnedItem->FinishSpawning(SpawnTransform, true);
+
+	if (InventorySlots[Index].Amount > 0)
+	{
+		InventorySlots[Index] = FItemData();
+		InventorySlots[Index].Amount = 0;;
+		UpdateInventorySlot(Index);
+	}
+}
+
 FItemData UInventory::GetItemIndex(int32 Index)
 {
 	LocalIndex = Index;
@@ -161,15 +208,15 @@ bool UInventory::CheckForEmptySlot()
 	{
 		if (InventorySlots[Index].ItemName.IsNone())
 		{
+			FoundIndex = Index;
 			LocalIndex = Index;
 			break;
 		}
 	}
 
-	if (FoundIndex != INDEX_NONE)
+	if (FoundIndex == INDEX_NONE)
 	{
 		return false;
 	}
 	return true;
 }
-

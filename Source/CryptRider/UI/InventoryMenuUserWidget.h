@@ -10,7 +10,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class CRYPTRIDER_API UInventoryMenuUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -26,10 +26,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<UMySlotUserWidget*> InventorySlots;
 
-	/*UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
-	UUserWidget* InventoryDropDown;*/
-	/*UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyCategory")
-	void UpdateSlot(int Index);*/
 	UFUNCTION(BlueprintCallable)
 	UMySlotUserWidget* GetChildAt(int32 Index);
 

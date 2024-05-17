@@ -9,11 +9,15 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class CRYPTRIDER_API UMySlotUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
+	virtual void NativeConstruct() override;
 public:
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "UpdateSlot"))
-	void UpdateSlot(int Index);
+	UFUNCTION(BlueprintImplementableEvent ,meta = (DisplayName = "UpdateSlot"))
+	void UpdateSlot(const int32 Index);
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int32 MyIndex;
 };

@@ -7,7 +7,7 @@
 /**
  * 
  */
-
+class AInventoryItemMaster;
 USTRUCT()
 struct CRYPTRIDER_API FItemData : public FTableRowBase
 {
@@ -54,4 +54,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Amount", MakeStructureDefaultValue = "0"))
 	int32 Amount;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ItemMasterClass"))
+	TSubclassOf<AInventoryItemMaster> ItemMasterClass;
 };

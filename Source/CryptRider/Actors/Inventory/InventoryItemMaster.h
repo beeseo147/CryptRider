@@ -22,6 +22,7 @@ protected:
 	virtual void PostRegisterAllComponents() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
+	void SetInventoryDataTableRow(FItemData* InItemData);
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowAbstract = true), Category = "BaseMesh")
 	UStaticMeshComponent* BaseMesh;
@@ -49,4 +50,7 @@ public:
 	FDataTableRowHandle InventoryData;
 
 	const FItemData* InventoryDataTableRow;
+
+	UPROPERTY()
+	int32 ItemAmount{ 0 };
 };

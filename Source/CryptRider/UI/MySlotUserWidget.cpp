@@ -2,3 +2,9 @@
 
 
 #include "UI/MySlotUserWidget.h"
+
+void UMySlotUserWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	UpdateSlot(MyIndex);
+}

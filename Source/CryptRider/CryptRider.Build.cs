@@ -9,8 +9,9 @@ public class CryptRider : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine",
-			"InputCore", "EnhancedInput"
-			});
+			"InputCore", "EnhancedInput", "UMG",
+            "Paper2D"
+            });
 
         PublicIncludePaths.Add("CryptRider");
         PublicIncludePaths.Add("CryptRider/Actors");
