@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/InventoryMenuUserWidget.h"
+#include "UI/ExaminationWidget.h"
 #include "UI/MainMenu.h"
 void ACryptRiderPlayerController::BeginPlay()
 {
@@ -32,4 +33,12 @@ void ACryptRiderPlayerController::BeginPlay()
 		InventoryMenuWidget->AddToViewport();
 		InventoryMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
+	{
+		LoadClass<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/Inventory/UI_Examination.UI_Examination_C'"),
+			nullptr, LOAD_None, nullptr);
+		UClass* WidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/Inventory/UI_Examination.UI_Examination_C'"));
+
+		ExaminationWidget = CreateWidget<UExaminationWidget>(GetWorld(), WidgetClass);
+	}
+
 }

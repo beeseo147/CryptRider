@@ -6,12 +6,24 @@
 #include "Components/ActorComponent.h"
 #include "Data/Item/ItemData.h"
 #include "Data/Item/InventoryItem.h"
+#include "Actors/Inventory/ExaminationActor.h"
 #include "Inventory.generated.h"
 
 
 struct FItemData;
 class UInventoryMenuUserWidget;
 class AInventoryItemMaster;
+class UExaminationWidget;
+class ACryptRiderPlayerController;
+//USTRUCT() 
+//struct CRYPTRIDER_API Examination
+//{
+//	UPROPERTY(EditAnywhere)
+//	USceneComponent* DefaultScene;
+//
+//	UPROPERTY(EditAnywhere)
+//	UStaticMesh* ChangeMesh;
+//};
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,6 +31,7 @@ class CRYPTRIDER_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
 	friend class UInventoryMenuUserWidget;
+	friend class UExaminationWidget;
 public:
 	// Sets default values for this component's properties
 	UInventory();
@@ -40,6 +53,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UInventoryMenuUserWidget* InventoryMenuWidgetRef = nullptr;
 
+	UPROPERTY(BlueprintReadWrite)
+	UExaminationWidget* ExaminationWidgetRef = nullptr;
+
 	UPROPERTY(BlueprintReadOnly)
 	FItemData LocalItem;
 
@@ -58,6 +74,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	class ACryptRiderCharacter* PlayerRef;
 
+	UPROPERTY(BlueprintReadOnly)
+	class ACryptRiderPlayerController* PlayerControllerRef;
+
+	/** Please add a variable description */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "DEfalut")
+	TObjectPtr<AExaminationActor> ExaminationActor;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(UPARAM(ref) FItemData&InItem);
@@ -69,6 +92,8 @@ protected:
 	void UseItem(int32 Index);
 	UFUNCTION(BlueprintCallable)
 	void DropItem(int32 Index);
+	UFUNCTION(BlueprintCallable)
+	void CreateExaminationUI(int32 Index);
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	FItemData GetItemIndex(int32 Index);

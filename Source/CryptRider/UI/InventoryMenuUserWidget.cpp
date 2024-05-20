@@ -28,7 +28,7 @@ void UInventoryMenuUserWidget::NativeConstruct()
 		for (int32 k = 0; k < Col; ++k)
 		{
 			UMySlotUserWidget * Widget = Cast<UMySlotUserWidget>(CreateWidget(this, InventoryItemWidgetClass));
-			Widget->MyIndex = Index;
+			Widget->MyIndex = Index++;
 			InventoryGrid->AddChildToUniformGrid(Widget,i, k);
 			InventorySlots.Add(Widget);
 			

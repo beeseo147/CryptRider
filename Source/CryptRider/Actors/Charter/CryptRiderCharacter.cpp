@@ -193,15 +193,15 @@ void ACryptRiderCharacter::Grab(const FInputActionValue& Value)
 void ACryptRiderCharacter::InventoryOpen(const FInputActionValue& Value)
 {
 	bool InventoryOpen = Value.Get<bool>();
-	if (!BPaused)
+	if (!bInventoryOpen)
 	{
-		BPaused = true;
+		bInventoryOpen = true;
 	}
 	else
 	{
-		BPaused = false;
+		bInventoryOpen = false;
 	}
-	if (BPaused)
+	if (bInventoryOpen)
 	{
 		GetCharacterMovement()->DisableMovement();
 		ACryptRiderPlayerController* PlayerController = Cast<ACryptRiderPlayerController>(GetController());
@@ -209,6 +209,10 @@ void ACryptRiderCharacter::InventoryOpen(const FInputActionValue& Value)
 
 		//이후로는 위젯
 		PlayerController->InventoryMenuWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		if (PlayerController->ExaminationWidget->IsInViewport())
+		{
+			PlayerController->ExaminationWidget->RemoveFromParent();
+		}
 		PlayerController->SetInputMode(FInputModeGameAndUI());
 	}
 	else 
@@ -230,6 +234,13 @@ void ACryptRiderCharacter::Pick(const FInputActionValue& Value)
 
 void ACryptRiderCharacter::Return(const FInputActionValue& Value)
 {
+	bool CloseExamination = Value.Get<bool>();
+	if (bInventoryOpen)
+	{
+		ACryptRiderPlayerController* PlayerController = Cast<ACryptRiderPlayerController>(GetController());
+		PlayerController->ExaminationWidget->RemoveFromParent();
+		InventoryOpen(true);
+	}
 }
 
 

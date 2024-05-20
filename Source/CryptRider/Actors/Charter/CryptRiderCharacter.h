@@ -113,6 +113,6 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	//ItemInventory Pause
-	bool BPaused = false;
+	bool bInventoryOpen = false;
 };
 

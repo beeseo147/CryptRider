@@ -10,7 +10,7 @@ public class CryptRider : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine",
 			"InputCore", "EnhancedInput", "UMG",
-            "Paper2D"
+            "Paper2D","GameplayTasks"
             });
 
         PublicIncludePaths.Add("CryptRider");

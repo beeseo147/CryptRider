@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/ExaminationWidget.h"
 #include "CryptRiderPlayerController.generated.h"
 
 class UInventoryMenuUserWidget;
 class UMainMenu;
+class UExaminationWidget;
 /**
  *
  */
@@ -23,9 +25,15 @@ protected:
 
 	// End Actor interface
 public:
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite)
 	UMainMenu* UMainMenuWidget;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite)
 	UInventoryMenuUserWidget* InventoryMenuWidget;
+
+	UPROPERTY(BlueprintReadWrite)
+	UExaminationWidget* ExaminationWidget;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool IsInventoryOpen = false;
 };

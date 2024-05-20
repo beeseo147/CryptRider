@@ -16,44 +16,44 @@ struct CRYPTRIDER_API FItemData : public FTableRowBase
 	FItemData() {}
 public:
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ItemName", MakeStructureDefaultValue = "None"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ItemName"))
 	FName ItemName;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Icon", MakeStructureDefaultValue = "None"))
-	UTexture2D* Icon;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Icon"))
+	UTexture2D* Icon = nullptr;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "MaxStackAmount", MakeStructureDefaultValue = "0"))
-	int32 MaxStackAmount;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "MaxStackAmount"))
+	int32 MaxStackAmount = 0;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BUsed", MakeStructureDefaultValue = "False"))
-	bool BUsed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BUsed"))
+	bool BUsed = false;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BDrop", MakeStructureDefaultValue = "False"))
-	bool BDrop;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BDrop"))
+	bool BDrop = false;
 
 	/** Please add a variable description */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Description"))
 	FText Description;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ExaminationMesh", MakeStructureDefaultValue = "None"))
-	UStaticMesh* ExaminationMesh;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ExaminationMesh"))
+	UStaticMesh* ExaminationMesh = nullptr;
 
 	/** Please add a variable description */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ExaminationMesh_Offset", MakeStructureDefaultValue = "0.000000"))
-	double ExaminationMesh_Offset;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ExaminationMesh_Offset"))
+	double ExaminationMesh_Offset = 0.0;
 
 	/** Please add a variable description */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "BExaminationMesh"))
-	bool BExaminationMesh;
+	bool BExaminationMesh = false;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Amount", MakeStructureDefaultValue = "0"))
-	int32 Amount;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Amount"))
+	int32 Amount = 0;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "ItemMasterClass"))
-	TSubclassOf<AInventoryItemMaster> ItemMasterClass;
+	TSubclassOf<AInventoryItemMaster> ItemMasterClass = nullptr;
 };

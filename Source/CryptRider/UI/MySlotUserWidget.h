@@ -18,6 +18,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent ,meta = (DisplayName = "UpdateSlot"))
 	void UpdateSlot(const int32 Index);
 
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "CloesDropDownMenu"))
+	void CloesDropDownMenu(const int32 Index);
+
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int32 MyIndex;
 };

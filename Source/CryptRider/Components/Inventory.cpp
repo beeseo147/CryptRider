@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Controller.h"
 #include "UI/InventoryMenuUserWidget.h"
+#include "UI/ExaminationWidget.h"
 #include "Data/Item/ItemData.h"
 #include "Data/Item/InventoryItem.h"
 #include "Actors/Inventory/InventoryItemMaster.h"
@@ -29,13 +30,26 @@ UInventory::UInventory()
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
 	InventorySlots.SetNum(InventoryCount);
-	//ACryptRiderPlayerController ThisController;
-	InventoryMenuWidgetRef = Cast< ACryptRiderPlayerController>(UGameplayStatics::GetPlayerController(this, 0))->InventoryMenuWidget;
-	PlayerRef = Cast< ACryptRiderCharacter>(UGameplayStatics::GetPlayerPawn(this,0));
+	APawn* OwningPawn = Cast<APawn>(GetOwner());
+	PlayerRef = Cast<ACryptRiderCharacter>(OwningPawn);
+	check(PlayerRef);
+
+	AController* Controller = OwningPawn->GetController();
+	PlayerControllerRef = Cast<ACryptRiderPlayerController>(Controller);
+	InventoryMenuWidgetRef = PlayerControllerRef->InventoryMenuWidget;
+	ExaminationWidgetRef = PlayerControllerRef->ExaminationWidget;
 	
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), AExaminationActor::StaticClass());
+	if (FoundActor)
+	{
+		ExaminationActor = Cast<AExaminationActor>(FoundActor);
+	}
+
+	check(InventoryMenuWidgetRef);
+	check(ExaminationWidgetRef);
+	check(ExaminationActor);
 }
 
 
@@ -187,8 +201,8 @@ void UInventory::DropItem(int32 Index)
 
 	if (InventorySlots[Index].Amount > 0)
 	{
-		InventorySlots[Index] = FItemData();
-		InventorySlots[Index].Amount = 0;;
+		InventorySlots[Index] = FItemData(); //Null 값으로 초기화
+		InventorySlots[Index].Amount = 0;
 		UpdateInventorySlot(Index);
 	}
 }
@@ -198,9 +212,12 @@ FItemData UInventory::GetItemIndex(int32 Index)
 	LocalIndex = Index;
 	//GetItemIndex는 인덱스 값을 주면 해당 인덱스에 있는
 	//InventorySlots에 아이템 주는것이다
+	if (InventorySlots.IsEmpty())
+	{
+		return FItemData();
+	}
 	return InventorySlots[Index];
 }
-
 bool UInventory::CheckForEmptySlot()
 {
 	int32 FoundIndex = INDEX_NONE;
@@ -219,4 +236,20 @@ bool UInventory::CheckForEmptySlot()
 		return false;
 	}
 	return true;
+}
+void UInventory::CreateExaminationUI(int32 Index)
+{
+	if (InventorySlots[Index].BExaminationMesh)
+	{
+		ExaminationWidgetRef->UpdateWidget(Index);
+		InventoryMenuWidgetRef->SetVisibility(ESlateVisibility::Collapsed);
+		InventoryMenuWidgetRef->GetChildAt(Index)->CloesDropDownMenu(Index);
+		ExaminationWidgetRef->AddToViewport();
+		PlayerRef->bInventoryOpen = true;
+	}
+	else
+	{
+		ensure(InventorySlots[Index].BExaminationMesh);
+
+	}
 }
