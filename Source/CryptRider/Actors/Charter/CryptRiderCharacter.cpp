@@ -257,12 +257,14 @@ void ACryptRiderCharacter::Interact(const FInputActionValue& Value)
 	FVector CameraVector = PlayerCamera->GetForwardVector();
 	FHitResult HitResult;
 	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraLocation + CameraVector * 200,
-		ETraceTypeQuery::TraceTypeQuery12, false,
-		TArray<class AActor*>(), EDrawDebugTrace::None, HitResult, true);
-
+		ETraceTypeQuery::TraceTypeQuery13, false,
+		TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true);
+	
 	AActor* HitActor = HitResult.GetActor();
 	if (HitActor)
 	{
+		FString MyString = HitActor->GetName();
+		UE_LOG(LogTemp, Display, TEXT("Now : %s"), *MyString);
 		bool bIsImplemented = HitActor->GetClass()->ImplementsInterface(UPlayerInterFace::StaticClass());
 		if (bIsImplemented)
 		{
