@@ -29,12 +29,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMover(UMover* NewMover);
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 private:
 	AActor* GetAcceptableActor() const;
 private:
 	UPROPERTY(EditAnywhere)
-	FName AcceptableActorTag;
+	FString AcceptableActorTag;
 
 	UMover* Mover;
-
 };

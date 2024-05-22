@@ -6,21 +6,30 @@
 UTriggerComponent::UTriggerComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	SetGenerateOverlapEvents(true);
 }
 
 void UTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Display, TEXT("Trigger Component Alive"));
-
+	OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlapBegin);
 }
 
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);	
+}
 
+void UTriggerComponent::SetMover(UMover* NewMover)
+{
+	Mover = NewMover;
+}
+
+void UTriggerComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 	AActor* Actor = GetAcceptableActor();
-	if (Actor !=nullptr)
+	if (Actor != nullptr)
 	{
 		//UnLock
 		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(Actor->GetRootComponent());
@@ -36,21 +45,16 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 		// Actor의 월드 좌표계 기준 회전을 설정합니다.
 		Actor->SetActorRotation(FRotator(this->GetComponentRotation()), ETeleportType::TeleportPhysics);
-		
+
 		Mover->SetbShouldMove(true);
 
-		
+
 	}
 	else
 	{
 		//ReLock
 		Mover->SetbShouldMove(false);
 	}
-}
-
-void UTriggerComponent::SetMover(UMover* NewMover)
-{
-	Mover = NewMover;
 }
 
 AActor* UTriggerComponent::GetAcceptableActor() const
@@ -60,9 +64,8 @@ AActor* UTriggerComponent::GetAcceptableActor() const
 
 	for (auto Actor : Actors)
 	{
-		bool HasAcceptableTag = Actor->ActorHasTag(AcceptableActorTag);
 		bool IsGrabbed = Actor->ActorHasTag("Grabbed");
-		if (Actor->ActorHasTag(AcceptableActorTag)&& !Actor->ActorHasTag("Grabbed"))
+		if (Actor->GetActorNameOrLabel().Contains(AcceptableActorTag) && !Actor->ActorHasTag("Grabbed"))
 		{
 			return Actor;
 		}
