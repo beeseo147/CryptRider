@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Engine/Engine.h"
 #include "ExaminationActor.generated.h"
 
 UCLASS()
@@ -23,13 +24,13 @@ public:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USceneComponent * DefatualtScene;
-	UPROPERTY(VisibleDefaultsOnly, Category = "Scene")
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Gizmo")
 	USceneComponent* GizmoScene;
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(BlueprintReadWrite,VisibleAnywhere, Category = Mesh)
 	UStaticMeshComponent* Mesh1P;
 
-
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

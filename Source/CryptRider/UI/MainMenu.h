@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenu.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class CRYPTRIDER_API UMainMenu : public UUserWidget
 {

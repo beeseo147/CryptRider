@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Actors/Interface/PlayerInterFace.h"
 #include "CryptRiderCharacter.generated.h"
 
 class UInputComponent;
@@ -17,7 +18,7 @@ struct FInputActionValue;
 
 
 UCLASS(config=Game)
-class ACryptRiderCharacter : public ACharacter
+class ACryptRiderCharacter : public ACharacter, public IPlayerInterFace
 {
 	GENERATED_BODY()
 
@@ -69,18 +70,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ReturnAction;
 
-
-	/** Bool for AnimBP to switch to another animation set */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
-	bool bHasRifle;
-
-	/** Setter to set the bool */
-	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void SetHasRifle(bool bNewHasRifle);
-
-	/** Getter for the bool */
-	UFUNCTION(BlueprintCallable, Category = Weapon)
-	bool GetHasRifle();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
 
 protected:
 	/** Called for movement input */
@@ -101,6 +92,7 @@ protected:
 	/** Called for Return input */
 	void Return(const FInputActionValue& Value);
 
+	void Interact(const FInputActionValue& Value);
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

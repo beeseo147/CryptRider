@@ -32,6 +32,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,meta = (AllowAbstract = true), Category = "Sphere")
 	class USphereComponent* Sphere;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowAbstract = true), Category = "Prompt")
+	class UBoxComponent* CollisionMesh;
+
 public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "ItemDataLocation")
 	float PickUpDistance = 0.0;

@@ -7,9 +7,6 @@
 #include "UI/MySlotUserWidget.h"
 #include "InventoryMenuUserWidget.generated.h"
 
-/**
- *
- */
 UCLASS(BlueprintType)
 class CRYPTRIDER_API UInventoryMenuUserWidget : public UUserWidget
 {

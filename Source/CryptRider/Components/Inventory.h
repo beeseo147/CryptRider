@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,30 +6,19 @@
 #include "Data/Item/InventoryItem.h"
 #include "Actors/Inventory/ExaminationActor.h"
 #include "Inventory.generated.h"
-
-
 struct FItemData;
 class UInventoryMenuUserWidget;
 class AInventoryItemMaster;
 class UExaminationWidget;
 class ACryptRiderPlayerController;
-//USTRUCT() 
-//struct CRYPTRIDER_API Examination
-//{
-//	UPROPERTY(EditAnywhere)
-//	USceneComponent* DefaultScene;
-//
-//	UPROPERTY(EditAnywhere)
-//	UStaticMesh* ChangeMesh;
-//};
-
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CRYPTRIDER_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
+
 	friend class UInventoryMenuUserWidget;
 	friend class UExaminationWidget;
+
 public:
 	// Sets default values for this component's properties
 	UInventory();
@@ -77,7 +64,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	class ACryptRiderPlayerController* PlayerControllerRef;
 
-	/** Please add a variable description */
+	/** Please add a variable what you made */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "DEfalut")
 	TObjectPtr<AExaminationActor> ExaminationActor;
 
@@ -97,9 +84,6 @@ protected:
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	FItemData GetItemIndex(int32 Index);
-
-	/*UFUNCTION(BlueprintPure, BlueprintCallable)
-	void SetItemMastData(FItemData* InItemData);*/
 
 	UFUNCTION(BlueprintCallable)
 	bool CheckForEmptySlot();

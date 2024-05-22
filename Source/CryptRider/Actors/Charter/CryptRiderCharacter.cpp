@@ -14,6 +14,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Controller/CryptRiderPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/InventoryMenuUserWidget.h"
 #include "UI/MainMenu.h"
 
@@ -23,9 +24,6 @@
 
 ACryptRiderCharacter::ACryptRiderCharacter()
 {
-	// Character doesnt have a rifle at start
-	bHasRifle = false;
-	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
@@ -95,6 +93,12 @@ ACryptRiderCharacter::ACryptRiderCharacter()
 		check(Asset.Succeeded());
 		ReturnAction = Asset.Object;
 	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/Input/IA_Interface.IA_Interface'") };
+		check(Asset.Succeeded());
+		InteractAction = Asset.Object;
+	}
 }
 
 void ACryptRiderCharacter::BeginPlay()
@@ -142,6 +146,9 @@ void ACryptRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 		//Return
 		EnhancedInputComponent->BindAction(ReturnAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Return);
+
+		//Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ACryptRiderCharacter::Interact);
 	}
 	else
 	{
@@ -243,14 +250,24 @@ void ACryptRiderCharacter::Return(const FInputActionValue& Value)
 	}
 }
 
-
-
-void ACryptRiderCharacter::SetHasRifle(bool bNewHasRifle)
+void ACryptRiderCharacter::Interact(const FInputActionValue& Value)
 {
-	bHasRifle = bNewHasRifle;
-}
+	UCameraComponent* PlayerCamera = GetFirstPersonCameraComponent();
+	FVector CameraLocation = PlayerCamera->GetComponentLocation();
+	FVector CameraVector = PlayerCamera->GetForwardVector();
+	FHitResult HitResult;
+	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraLocation + CameraVector * 200,
+		ETraceTypeQuery::TraceTypeQuery12, false,
+		TArray<class AActor*>(), EDrawDebugTrace::None, HitResult, true);
 
-bool ACryptRiderCharacter::GetHasRifle()
-{
-	return bHasRifle;
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor)
+	{
+		bool bIsImplemented = HitActor->GetClass()->ImplementsInterface(UPlayerInterFace::StaticClass());
+		if (bIsImplemented)
+		{
+			// 인터페이스 함수 호출
+			IPlayerInterFace::Execute_ReactToTrigger(HitActor);
+		}
+	}
 }

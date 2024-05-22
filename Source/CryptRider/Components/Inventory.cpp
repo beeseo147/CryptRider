@@ -46,7 +46,6 @@ void UInventory::BeginPlay()
 	{
 		ExaminationActor = Cast<AExaminationActor>(FoundActor);
 	}
-
 	check(InventoryMenuWidgetRef);
 	check(ExaminationWidgetRef);
 	check(ExaminationActor);
@@ -188,11 +187,11 @@ void UInventory::DropItem(int32 Index)
 	FVector CameraLocation = PlayerCamera->GetComponentLocation();
 	FVector CameraVector = PlayerCamera->GetForwardVector();
 	FHitResult HitResult;
-	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraVector,
-		ETraceTypeQuery::TraceTypeQuery1, false,
+	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraLocation+CameraVector*200,
+		ETraceTypeQuery::TraceTypeQuery12, false,
 		TArray<class AActor*>(), EDrawDebugTrace::None, HitResult, true);
 
-	FTransform SpawnTransform = HitResult.bBlockingHit ? FTransform(HitResult.TraceEnd) : FTransform(HitResult.Location);
+	FTransform SpawnTransform = HitResult.bBlockingHit ?  FTransform(HitResult.Location): FTransform(HitResult.TraceEnd);
 
 	AInventoryItemMaster * SpawnedItem = GetWorld()->SpawnActorDeferred<AInventoryItemMaster>(LocalItem.ItemMasterClass.Get(),
 		SpawnTransform);

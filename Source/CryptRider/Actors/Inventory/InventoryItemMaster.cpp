@@ -3,6 +3,7 @@
 #include "Actors/Inventory/InventoryItemMaster.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Data/Item/ItemData.h"
 
 // Sets default values
@@ -10,15 +11,17 @@ AInventoryItemMaster::AInventoryItemMaster()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	BaseMesh = CreateDefaultSubobject< UStaticMeshComponent>(TEXT("BaseMesh"));
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	RootComponent = BaseMesh;
-	
-	BaseMesh->SetSimulatePhysics(true);
-	Prompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("Prompt"));
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 
-	Prompt->SetupAttachment(RootComponent);
-	Sphere->SetupAttachment(RootComponent);
+	CollisionMesh = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+	CollisionMesh->SetupAttachment(BaseMesh);
+
+	Prompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("Prompt"));
+	Prompt->SetupAttachment(BaseMesh);
+
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetupAttachment(BaseMesh);
 }
 
 void AInventoryItemMaster::PreRegisterAllComponents()

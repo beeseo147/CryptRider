@@ -16,21 +16,19 @@ AExaminationActor::AExaminationActor()
 	RootComponent = DefatualtScene;
 	GizmoScene->SetupAttachment(DefatualtScene);
 	Mesh1P->SetupAttachment(GizmoScene);
-	
 }
 
 // Called when the game starts or when spawned
 void AExaminationActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	/*FVector MeshSize = Mesh1P->GetStaticMesh()->GetBounds().GetBox().GetSize();
+	GizmoScene->SetRelativeLocation(MeshSize / 2);*/
 }
 
 void AExaminationActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	FVector MeshSize = Mesh1P->GetStaticMesh()->GetBounds().GetBox().GetSize();
-	GizmoScene->SetRelativeLocation(MeshSize/2);
 }
 
 // Called every frame
