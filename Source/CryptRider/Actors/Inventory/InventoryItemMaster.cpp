@@ -3,7 +3,6 @@
 #include "Actors/Inventory/InventoryItemMaster.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
-#include "Components/BoxComponent.h"
 #include "Data/Item/ItemData.h"
 
 // Sets default values
@@ -13,9 +12,6 @@ AInventoryItemMaster::AInventoryItemMaster()
 	PrimaryActorTick.bCanEverTick = true;
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	RootComponent = BaseMesh;
-
-	CollisionMesh = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	CollisionMesh->SetupAttachment(BaseMesh);
 
 	Prompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("Prompt"));
 	Prompt->SetupAttachment(BaseMesh);
@@ -53,7 +49,6 @@ void AInventoryItemMaster::OnConstruction(const FTransform& Transform)
 void AInventoryItemMaster::BeginPlay()
 {
 	Super::BeginPlay();
-	BaseMesh->SetSimulatePhysics(true);
 }
 
 void AInventoryItemMaster::SetInventoryDataTableRow(FItemData* InItemData)

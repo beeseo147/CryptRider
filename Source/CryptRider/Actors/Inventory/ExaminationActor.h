@@ -28,7 +28,7 @@ public:
 	USceneComponent* GizmoScene;
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(BlueprintReadWrite,VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* Mesh1P;
+	class UChildActorComponent* Mesh1P;
 
 	
 public:	

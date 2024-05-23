@@ -141,7 +141,7 @@ bool UInventory::AddItem(UPARAM(ref) FItemData&InItem)
 			return false;
 		}
 	}
-
+	
 	return true;
 }
 
@@ -195,6 +195,7 @@ void UInventory::DropItem(int32 Index)
 
 	AInventoryItemMaster * SpawnedItem = GetWorld()->SpawnActorDeferred<AInventoryItemMaster>(LocalItem.ItemMasterClass.Get(),
 		SpawnTransform);
+	
 	SpawnedItem->ItemAmount = InventorySlots[Index].Amount;
 	SpawnedItem->FinishSpawning(SpawnTransform, true);
 

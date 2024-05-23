@@ -2,7 +2,7 @@
 
 
 #include "Actors/Inventory/ExaminationActor.h"
-
+#include "Components/ChildActorComponent.h"
 // Sets default values
 AExaminationActor::AExaminationActor()
 {
@@ -11,7 +11,7 @@ AExaminationActor::AExaminationActor()
 
 	DefatualtScene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	GizmoScene = CreateDefaultSubobject<USceneComponent>(TEXT("Gizmo"));
-	Mesh1P = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	Mesh1P = CreateDefaultSubobject<UChildActorComponent>(TEXT("ItemMesh"));
 
 	RootComponent = DefatualtScene;
 	GizmoScene->SetupAttachment(DefatualtScene);
