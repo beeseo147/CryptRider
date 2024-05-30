@@ -8,7 +8,12 @@ ACryptRiderGameMode::ACryptRiderGameMode()
 	: Super()
 {
 	{
-		ConstructorHelpers::FClassFinder<APawn> Asset(TEXT("/Script/Engine.Blueprint'/Game/VR/BP_VRPawn.BP_VRPawn'_C"));
+		ConstructorHelpers::FClassFinder<APawn> Asset(TEXT("/Script/Engine.Blueprint'/Game/VR/BP_VRPawn.BP_VRPawn_C'"));
+		check(Asset.Class);
+		VRPawnClass = Asset.Class;
+	}
+	{
+		ConstructorHelpers::FClassFinder<APlayerController> Asset(TEXT("/Script/Engine.Blueprint'/Game/VR/BP_VRPlayerController.BP_VRPlayerController_C'"));
 		check(Asset.Class);
 		VRPawnClass = Asset.Class;
 	}
@@ -16,10 +21,16 @@ ACryptRiderGameMode::ACryptRiderGameMode()
 
 FString ACryptRiderGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
 {
+	
+}
+
+APlayerController* ACryptRiderGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
 	const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
 	if (bVR)
 	{
 		DefaultPawnClass = VRPawnClass;
+		PlayerControllerClass = VRPlayerControllerClass;
 	}
-	return Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+	return Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
 }
