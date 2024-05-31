@@ -11,7 +11,9 @@ public class CryptRider : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine",
 			"InputCore", "EnhancedInput", "UMG",
             "Paper2D","GameplayTasks",
-            "XRBase"
+
+            "XRBase", "HeadMountedDisplay" // VR
+
             });
 
         PublicIncludePaths.Add("CryptRider");

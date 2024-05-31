@@ -3,7 +3,7 @@
 #include "CryptRiderGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
-
+#include "VR/VRCharacter.h"
 ACryptRiderGameMode::ACryptRiderGameMode()
 	: Super()
 {
@@ -18,18 +18,12 @@ ACryptRiderGameMode::ACryptRiderGameMode()
 		VRPawnClass = Asset.Class;
 	}
 }
-
-FString ACryptRiderGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
-{
-	
-}
-
 APlayerController* ACryptRiderGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
 	const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
 	if (bVR)
 	{
-		DefaultPawnClass = VRPawnClass;
+		DefaultPawnClass = AVRCharacter::StaticClass();
 		PlayerControllerClass = VRPlayerControllerClass;
 	}
 	return Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
