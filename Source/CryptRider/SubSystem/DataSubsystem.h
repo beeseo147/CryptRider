@@ -21,13 +21,7 @@ public:
 	UDataSubsystem();
 
 	const FItemData* FindItemData(const FName& InKey);
-	//const FInventoryItem* FindInventoryItem(const FItemData& InKey);
-
 protected:
 	UPROPERTY()
 	UDataTable* FItemDataTable;
-
-	/*UPROPERTY()
-	UDataTable* FInventoryDataTable;*/
-
 };

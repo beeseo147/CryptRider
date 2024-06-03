@@ -16,9 +16,14 @@ public:
 
 protected:
 	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
-private:
-	UClass* VRPawnClass = nullptr;
-	UClass* VRPlayerControllerClass = nullptr;
+
+protected:
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<APawn> VRPawnClass = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<APlayerController> VRPlayerControllerClass = nullptr;
+
+
 };
 
 

@@ -23,7 +23,7 @@ APlayerController* ACryptRiderGameMode::Login(UPlayer* NewPlayer, ENetRole InRem
 	const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
 	if (bVR)
 	{
-		DefaultPawnClass = AVRCharacter::StaticClass();
+		DefaultPawnClass = VRPawnClass;
 		PlayerControllerClass = VRPlayerControllerClass;
 	}
 	return Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);

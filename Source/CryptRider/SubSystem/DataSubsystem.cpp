@@ -20,10 +20,3 @@ const FItemData* UDataSubsystem::FindItemData(const FName& InKey)
 	ensure(Row);
 	return Row;
 }
-
-//const FInventoryItem* UDataSubsystem::FindInventoryItem(const FItemData& InKey)
-//{
-//	FInventoryItem* Row = FInventoryDataTable->FindRow<FInventoryItem>(InKey.ItemName, TEXT(""));
-//	ensure(Row);
-//	return Row;
-//}
