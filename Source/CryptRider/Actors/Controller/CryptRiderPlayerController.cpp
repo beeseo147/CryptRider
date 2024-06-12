@@ -40,5 +40,4 @@ void ACryptRiderPlayerController::BeginPlay()
 
 		ExaminationWidget = CreateWidget<UExaminationWidget>(GetWorld(), WidgetClass);
 	}
-
 }

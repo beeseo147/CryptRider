@@ -22,8 +22,6 @@ protected:
 	TSubclassOf<APawn> VRPawnClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<APlayerController> VRPlayerControllerClass = nullptr;
-
-
 };
 
 

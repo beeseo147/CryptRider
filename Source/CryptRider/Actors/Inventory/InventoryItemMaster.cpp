@@ -18,6 +18,7 @@ AInventoryItemMaster::AInventoryItemMaster()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(BaseMesh);
+
 }
 
 void AInventoryItemMaster::PreRegisterAllComponents()
@@ -54,6 +55,32 @@ void AInventoryItemMaster::BeginPlay()
 void AInventoryItemMaster::SetInventoryDataTableRow(FItemData* InItemData)
 {
 	InventoryDataTableRow = InItemData;
+}
+
+void AInventoryItemMaster::OnGrab()
+{
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	check(OwnerPawn);
+
+	APlayerController* PlayerController = Cast<APlayerController>(OwnerPawn->GetController());
+	check(PlayerController);
+
+	bool bBindAction = false;
+	if (!InputComponent)
+	{
+		bBindAction = true;
+	}
+}
+
+void AInventoryItemMaster::OnReleaseGrab()
+{
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	check(OwnerPawn);
+
+	APlayerController* PlayerController = Cast<APlayerController>(OwnerPawn->GetController());
+	check(PlayerController);
+
+	DisableInput(PlayerController);
 }
 
 // Called every frame

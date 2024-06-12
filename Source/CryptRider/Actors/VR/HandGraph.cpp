@@ -6,59 +6,82 @@
 #include "InputAction.h"
 #include "EnhancedInputComponent.h"
 #include "VRCharacter.h"
-UVRInputDataConfig::UVRInputDataConfig()
+#include "Data/Input/InputDataConfig.h"
+UVRHandsInputDataConfig::UVRHandsInputDataConfig()
 {
 	{
 		static ConstructorHelpers::FObjectFinder<UInputMappingContext> Asset
-		{TEXT("/Script/EnhancedInput.InputMappingContext'/Game/KDT2/Blueprint/VR/Hands/Input/IMC_Hands.IMC_Hands'")};
+		{ TEXT("/Script/EnhancedInput.InputMappingContext'/Game/VR/Hands/Input/IMC_Hands.IMC_Hands'") };
 		check(Asset.Object);
 		InputMappingContext = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Grab_Left.IA_Grab_Left'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Grab_Left.IA_Grab_Left'") };
 		check(Asset.Object);
 		IA_Grab_Left = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Grab_Right.IA_Grab_Right'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Grab_Right.IA_Grab_Right'") };
+		check(Asset.Object);
+		IA_Grab_Right = Asset.Object;
+	}
+}
+
+UVRHandsAnimationInputDataConfig::UVRHandsAnimationInputDataConfig()
+{
+	{
+		static ConstructorHelpers::FObjectFinder<UInputMappingContext> Asset
+		{ TEXT("/Script/EnhancedInput.InputMappingContext'/Game/VR/Hands/Input/IMC_Hands.IMC_Hands'") };
+		check(Asset.Object);
+		InputMappingContext = Asset.Object;
+	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Grab_Left.IA_Grab_Left'") };
+		check(Asset.Object);
+		IA_Grab_Left = Asset.Object;
+	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Grab_Right.IA_Grab_Right'") };
 		check(Asset.Object);
 		IA_Grab_Right = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Point_Left.IA_Point_Left'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Point_Left.IA_Point_Left'") };
 		check(Asset.Object);
 		IA_Point_Left = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Point_Right.IA_Point_Right'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Point_Right.IA_Point_Right'") };
 		check(Asset.Object);
 		IA_Point_Right = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_IndexCurl_Left.IA_IndexCurl_Left'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_IndexCurl_Left.IA_IndexCurl_Left'") };
 		check(Asset.Object);
 		IA_IndexCurl_Left = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_IndexCurl_Right.IA_IndexCurl_Right'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_IndexCurl_Right.IA_IndexCurl_Right'") };
 		check(Asset.Object);
 		IA_IndexCurl_Right = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Thumb_Left.IA_Thumb_Left'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Thumb_Left.IA_Thumb_Left'") };
 		check(Asset.Object);
 		IA_Thumb_Left = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/KDT2/Blueprint/VR/Hands/Input/IA_Thumb_Right.IA_Thumb_Right'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/VR/Hands/Input/IA_Thumb_Right.IA_Thumb_Right'") };
 		check(Asset.Object);
 		IA_Thumb_Right = Asset.Object;
 	}
@@ -72,7 +95,7 @@ void UHandGraph::SetupPlayerInputComponent(UMotionControllerComponent* InMotionC
 	AVRCharacter* Character = Cast<AVRCharacter>(MotionControllerComponent->GetOwner());
 	check(Character);
 
-	const UVRInputDataConfig* VRInputDataConfig = GetDefault<UVRInputDataConfig>();
+	const UVRHandsAnimationInputDataConfig* VRInputDataConfig = GetDefault<UVRHandsAnimationInputDataConfig>();
 
 	HandType = MotionControllerComponent->MotionSource == LeftGrip ? EHandType::Left : EHandType::Right;
 	VRHandAnimInstance = HandType == EHandType::Left ?

@@ -11,12 +11,12 @@
 #include "HandGraph.generated.h"
 
 UCLASS()
-class CRYPTRIDER_API UVRInputDataConfig : public UObject
+class CRYPTRIDER_API UVRHandsAnimationInputDataConfig : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UVRInputDataConfig();
+    UVRHandsAnimationInputDataConfig();
 
     UInputMappingContext* InputMappingContext = nullptr;
 
@@ -32,6 +32,30 @@ public:
 
     UInputAction* IA_Thumb_Left = nullptr;
     UInputAction* IA_Thumb_Right = nullptr;
+};
+
+UCLASS()
+class CRYPTRIDER_API UVRHandsInputDataConfig : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UVRHandsInputDataConfig();
+
+    UInputMappingContext* InputMappingContext = nullptr;
+
+public:
+    UInputAction* IA_Grab_Left = nullptr;
+    UInputAction* IA_Grab_Right = nullptr;
+
+    /*UInputAction* IA_Point_Left = nullptr;
+    UInputAction* IA_Point_Right = nullptr;
+
+    UInputAction* IA_IndexCurl_Left = nullptr;
+    UInputAction* IA_IndexCurl_Right = nullptr;
+
+    UInputAction* IA_Thumb_Left = nullptr;
+    UInputAction* IA_Thumb_Right = nullptr;*/
 };
 
 UCLASS()
