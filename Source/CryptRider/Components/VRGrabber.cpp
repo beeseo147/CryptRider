@@ -68,19 +68,23 @@ void UVRGrabber::Grab(UMotionControllerComponent* NewMotionControllerComponent)
 
 		FTransform FinalTransform = UKismetMathLibrary::ComposeTransforms(GrabComponentRotationAndTranslationAdjustedTransform, HandRotationTrnasform);
 		It->SetRelativeTransform(FinalTransform, false, nullptr, ETeleportType::ResetPhysics);
-
+		
+	}
+	if (GetOwner()->Tags.Contains("Grabbed"))
+	{
+		GetOwner()->Tags.Add("Grabbed");
 	}
 }
 
 void UVRGrabber::ReleaseGrab()
 {
-	//OnReleaseGrabbed.Broadcast();
+	OnReleaseGrabbed.Broadcast();
 
 	AActor* Actor = GetOwner();
 	Actor->SetActorEnableCollision(true);
 	Actor->SetOwner(nullptr);
 	Actor->SetInstigator(nullptr);
-
+	Actor->Tags.Remove("Grabbed");
 	for (UPrimitiveComponent* It : OwnerPrimitiveComponents)
 	{
 		It->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);

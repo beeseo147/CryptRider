@@ -173,7 +173,7 @@ void AVRCharacter::OnGrabStarted(UMotionControllerComponent* MotionControllerCom
 	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, TEXT("OnGrabStarted"));
 	const FVector WorldLocation = MotionControllerComponent->GetComponentLocation();
 	const float Radius = 60.f;
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody) };
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_EngineTraceChannel2) };
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> HitResults;
 	UKismetSystemLibrary::SphereTraceMultiForObjects(this, WorldLocation, WorldLocation,
@@ -214,7 +214,24 @@ void AVRCharacter::OnGrabStarted(UMotionControllerComponent* MotionControllerCom
 
 void AVRCharacter::OnGrabCompleted(UMotionControllerComponent* MotionControllerComponent, const bool bLeft, const FInputActionValue& InputActionValue)
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, TEXT("OnGrabCompleted"));
+	UVRGrabber** TargetGrabComponentPointer = bLeft ? &LeftHandAttachedGrabComponent : &RightHandAttachedGrabComponent;
+	UVRGrabber* TargetGrabComponent = *TargetGrabComponentPointer;
+	if (!IsValid(TargetGrabComponent))
+	{
+		if (bLeft)
+		{
+			WidgetInteractionLeft->ReleasePointerKey(FKey(TEXT("LeftMouseButton")));
+		}
+		else
+		{
+			WidgetInteractionRight->ReleasePointerKey(FKey(TEXT("LeftMouseButton")));
+		}
+		return;
+	}
+
+	TargetGrabComponent->ReleaseGrab();
+
+	*TargetGrabComponentPointer = nullptr;
 }
 
 

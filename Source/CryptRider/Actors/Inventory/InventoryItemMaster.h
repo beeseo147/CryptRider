@@ -61,4 +61,5 @@ public:
 
 	UPROPERTY()
 	int32 ItemAmount{ 0 };
+	
 };

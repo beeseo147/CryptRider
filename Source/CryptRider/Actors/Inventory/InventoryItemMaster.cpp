@@ -4,7 +4,8 @@
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "Data/Item/ItemData.h"
-
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Components/VRGrabber.h"
 // Sets default values
 AInventoryItemMaster::AInventoryItemMaster()
 {
@@ -18,6 +19,30 @@ AInventoryItemMaster::AInventoryItemMaster()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(BaseMesh);
+
+	if (GEngine != nullptr)
+	{
+		const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
+		if (bVR)
+		{
+			if (GEngine != nullptr)
+			{
+				UVRGrabber* VRGraber = CreateDefaultSubobject<UVRGrabber>(TEXT("VRGraber"));
+				if (VRGraber != nullptr)
+				{
+					VRGraber->SetupAttachment(RootComponent);
+				}
+				else
+				{
+					// VRGraber 생성 실패 처리
+				}
+			}
+			else
+			{
+				// GEngine이 nullptr일 때 처리
+			}
+		}
+	}
 
 }
 

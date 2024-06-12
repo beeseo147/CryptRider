@@ -22,6 +22,9 @@ class UHandGraph;
 class UCameraComponent;
 class UVRHandSkeletalMeshComponent;
 class UWidgetInteractionComponent;
+class UInventoryMenuUserWidget;
+class UMainMenu;
+class UExaminationWidget;
 
 UCLASS()
 class CRYPTRIDER_API AVRCharacter : public ACharacter
@@ -90,4 +93,17 @@ protected:
 
 	UPROPERTY(Transient)
 	class UVRGrabber* RightHandAttachedGrabComponent = nullptr;
+
+//protected:
+//	UPROPERTY(BlueprintReadWrite)
+//	UMainMenu* UMainMenuWidget;
+//
+//	UPROPERTY(BlueprintReadWrite)
+//	UInventoryMenuUserWidget* InventoryMenuWidget;
+//
+//	UPROPERTY(BlueprintReadWrite)
+//	UExaminationWidget* ExaminationWidget;
+//
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+//	bool IsInventoryOpen = false;
 };
