@@ -59,7 +59,7 @@ public:
 };
 
 UCLASS()
-class CRYPTRIDER_API UHandGraph : public UObject
+class CRYPTRIDER_API UHandGraph : public UActorComponent
 {
     GENERATED_BODY()
 
