@@ -11,10 +11,18 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Data/Input/InputDataConfig.h"
+#include "GameFramework/Controller.h"
 #include "HandGraph.h"
 #include "Components/WidgetComponent.h"
 #include "Components/WidgetInteractionComponent.h"
 #include "Components/VRHandSkeletalMeshComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "UI/VRInventoryMenuUserWidget.h"
+#include "UI/ExaminationWidget.h"
+#include "UI/MainMenu.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include"GameFramework/PlayerController.h"
+#include "Components/VRInventory.h"
 
 AVRCharacter::AVRCharacter()
 {
@@ -25,6 +33,7 @@ AVRCharacter::AVRCharacter()
 
 	VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
 	VRCamera->SetupAttachment(GetRootComponent());
+	VRCamera->SetRelativeLocation(FVector(0, 0, 50));
 	{
 		//motionController
 		MotionControllerLeft = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionControllerLeft"));
@@ -58,9 +67,6 @@ AVRCharacter::AVRCharacter()
 		WidgetInteractionRight->bShowDebug = true;
 		WidgetInteractionRight->TraceChannel = ECollisionChannel::ECC_GameTraceChannel6;
 	}
-
-	
-
 	HandGraphLeft = CreateDefaultSubobject<UHandGraph>(TEXT("HandGraphLeft"));
 	HandGraphRight = CreateDefaultSubobject<UHandGraph>(TEXT("HandGraphRight"));
 	
@@ -92,6 +98,74 @@ AVRCharacter::AVRCharacter()
 		LeftHand->bMirror = true;
 		LeftHand->SetAnimClass(AnimClass.Class);
 	}
+	{
+		//UVRInventory
+		VRInventoryComponents = CreateDefaultSubobject<UVRInventory>(TEXT("VRInventory"));
+	}
+	//UI
+	{
+		LoadClass<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/BP_VRMainUIC++.BP_VRMainUIC++_C'"),
+			nullptr, LOAD_None, nullptr);
+		LoadClass<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRInventoryMenu.UI_VRInventoryMenu_C'"),
+			nullptr, LOAD_None, nullptr);
+		
+		{
+			//UClass* WidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/BP_VRMainUIC++.BP_VRMainUIC++_C'"));
+			//if (WidgetClass)
+			//{
+			//	//UMainMenuWidget = CreateWidget<UMainMenu>(GetWorld(), WidgetClass);
+			//	//UMainMenuWidget->AddToViewport();
+			//}
+			//else
+			//{
+			//	ensure(WidgetClass);
+			//}
+		}
+		{
+			/*static ConstructorHelpers::FClassFinder<UVRInventoryMenuUserWidget>FindClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRInventoryMenu.UI_VRInventoryMenu_C'"));
+			check(FindClass.Class);*/
+
+			UClass* WidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRInventoryMenu.UI_VRInventoryMenu_C'"));
+			check(WidgetClass);
+			//InventoryMenuWidget = CreateWidget<UVRInventoryMenuUserWidget>(GetWorld(), WidgetClass);
+			/*if (InventoryMenuWidget)
+			{
+				InventoryMenuWidget->SetVisibility(ESlateVisibility::Visible);
+			}*/
+			InventoryHUD = CreateDefaultSubobject<UWidgetComponent>(TEXT("InventoryHUD"));
+			//InventoryHUD->InitWidget();
+			InventoryHUD->SetupAttachment(VRCamera);
+			//if (InventoryMenuWidget)
+			{
+				InventoryHUD->SetWidgetClass(WidgetClass);
+				//InventoryHUD->SetWidget(InventoryMenuWidget);
+			}
+			InventoryHUD->SetRelativeLocation(FVector(300,0,0));
+			InventoryHUD->SetRelativeRotation(FRotator(0, -180., 0));
+			InventoryHUD->SetWidgetSpace(EWidgetSpace::World);
+			InventoryHUD->SetDrawSize(FVector2D(256, 256));
+			InventoryHUD->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel6);
+			InventoryHUD->SetBlendMode(EWidgetBlendMode::Transparent);
+			InventoryHUD->SetGeometryMode(EWidgetGeometryMode::Cylinder);
+			InventoryHUD->SetCylinderArcAngle(90);
+			InventoryHUD->SetVisibility(false);
+			
+		}
+		{
+			//UClass* WidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRInventoryMenu.UI_VRInventoryMenu_C'"));
+			//check(WidgetClass);
+			//InventoryMenuWidget = CreateWidget<UVRInventoryMenuUserWidget>(GetWorld(), WidgetClass);
+			
+		}
+		{
+			LoadClass<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRExamination.UI_VRExamination_C'"),
+				nullptr, LOAD_None, nullptr);
+			UClass* WidgetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/VR/UI_VRExamination.UI_VRExamination_C'"));
+
+			ExaminationWidget = CreateWidget<UExaminationWidget>(GetWorld(), WidgetClass);
+		}
+	}
+	ensure(InventoryHUD);
 }
 
 // Called when the game starts or when spawned
@@ -114,6 +188,12 @@ void AVRCharacter::BeginPlay()
 		Subsystem->AddMappingContext(VRHandsAnimationInputDataConfig->InputMappingContext, 1);
 	}
 	else { check(false); }
+	ensure(InventoryHUD);
+
+	if (!InventoryMenuWidget)
+	{
+		InventoryMenuWidget = Cast<UVRInventoryMenuUserWidget>(InventoryHUD->GetWidget());
+	}
 }
 
 // Called every frame
@@ -133,6 +213,10 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	{
 		const UInputDataConfig* BasicInputDataConfig = GetDefault<UInputDataConfig>();
 		EnhancedInputComponent->BindAction(BasicInputDataConfig->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->InventoryAction, ETriggerEvent::Started, this, &ThisClass::InventoryOpen);
+		
+		//Pick
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->PickAction, ETriggerEvent::Started, this, &ThisClass::Pick);
 	}
 	{
 		const UVRHandsInputDataConfig* VRHandsInputDataConfig = GetDefault<UVRHandsInputDataConfig>();
@@ -167,6 +251,8 @@ void AVRCharacter::OnMove(const FInputActionValue& InputActionValue)
 		AddMovementInput(RightVector, ActionValue.X);
 	}
 }
+
+
 
 void AVRCharacter::OnGrabStarted(UMotionControllerComponent* MotionControllerComponent, const bool bLeft, const FInputActionValue& InputActionValue)
 {
@@ -233,5 +319,40 @@ void AVRCharacter::OnGrabCompleted(UMotionControllerComponent* MotionControllerC
 
 	*TargetGrabComponentPointer = nullptr;
 }
+void AVRCharacter::InventoryOpen(const FInputActionValue& InputActionValue)
+{
+	bool InventoryOpen = InputActionValue.Get<bool>();
+	if (!bInventoryOpen)
+	{
+		bInventoryOpen = true;
+	}
+	else
+	{
+		bInventoryOpen = false;
+	}
+	if (bInventoryOpen)
+	{
+		GetCharacterMovement()->DisableMovement();
+		//이후로는 위젯
+		InventoryHUD->SetVisibility(true);
+		
+		//InventoryMenuWidget->SetVisibility(ESlateVisibility::Visible);
+		/*if (ExaminationWidget->IsInViewport())
+		{
+			ExaminationWidget->RemoveFromParent();
+		}*/
+		//SetInputMode(FInputModeGameAndUI());
+	}
+	else
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
+		//이후로는 위젯
+		InventoryHUD->SetVisibility(false);
+	}
+}
 
+void AVRCharacter::Pick(const FInputActionValue& InputActionValue)
+{
+	
+}

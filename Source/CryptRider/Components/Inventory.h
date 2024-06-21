@@ -78,7 +78,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void UseItem(int32 Index);
 	UFUNCTION(BlueprintCallable)
-	void DropItem(int32 Index);
+	virtual void DropItem(int32 Index);
 	UFUNCTION(BlueprintCallable)
 	void CreateExaminationUI(int32 Index);
 

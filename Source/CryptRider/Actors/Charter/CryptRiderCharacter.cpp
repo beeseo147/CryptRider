@@ -43,7 +43,7 @@ ACryptRiderCharacter::ACryptRiderCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 	Grabber = CreateDefaultSubobject<UGrabber>(TEXT("Grabber"));
 	Grabber->SetupAttachment(FirstPersonCameraComponent);
-
+	
 
 	{
 		static ConstructorHelpers::FObjectFinder<UInputMappingContext> Asset

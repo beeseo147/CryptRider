@@ -6,6 +6,10 @@
 #include "Data/Item/ItemData.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Components/VRGrabber.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Actors/Charter/CryptRiderCharacter.h"
+#include "VR/VRCharacter.h"
 // Sets default values
 AInventoryItemMaster::AInventoryItemMaster()
 {
@@ -16,10 +20,21 @@ AInventoryItemMaster::AInventoryItemMaster()
 
 	Prompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("Prompt"));
 	Prompt->SetupAttachment(BaseMesh);
-
+	TSubclassOf<UPickUpPrompt> PickUpPromptClass;
+	if (ConstructorHelpers::FClassFinder<UPickUpPrompt> PickUpPromptClassFinder(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/Inventory/UI_PickUpPrompt.UI_PickUpPrompt_C'"));
+		PickUpPromptClassFinder.Class)
+	{
+		PickUpPromptClass = PickUpPromptClassFinder.Class;
+		Prompt->SetWidgetClass(PickUpPromptClass);
+	}
+	Prompt->SetVisibility(false);
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(BaseMesh);
-
+	Sphere->SetSphereRadius(220.f);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	//Sphere->SetCollisionResponseToChannel(OverLapALLdY);
 	if (GEngine != nullptr)
 	{
 		const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
@@ -43,6 +58,8 @@ AInventoryItemMaster::AInventoryItemMaster()
 			}
 		}
 	}
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlapBegin);       // 이 컴포넌트가 무언가에 겹칠 때에 대한 알림 구성
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnOverlapEnd);       // 이 컴포넌트가 무언가에 겹칠 때에 대한 알림 구성
 
 }
 
@@ -62,7 +79,6 @@ void AInventoryItemMaster::PreRegisterAllComponents()
 void AInventoryItemMaster::PostRegisterAllComponents()
 {
 	Super::PostRegisterAllComponents();
-
 }
 
 void AInventoryItemMaster::OnConstruction(const FTransform& Transform)
@@ -75,6 +91,30 @@ void AInventoryItemMaster::OnConstruction(const FTransform& Transform)
 void AInventoryItemMaster::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AInventoryItemMaster::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+	const bool bVR = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
+
+	if (bVR)
+	{
+		Player = Cast<AVRCharacter>(OtherActor);
+	}
+	else
+	{
+		Player = Cast<ACryptRiderCharacter>(OtherActor);
+	}
+	Prompt->SetVisibility(true);
+	UpdateActor = true;
+}
+
+void AInventoryItemMaster::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Prompt->SetVisibility(false);
+	UpdateActor = false;
+	DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 }
 
 void AInventoryItemMaster::SetInventoryDataTableRow(FItemData* InItemData)
@@ -112,6 +152,50 @@ void AInventoryItemMaster::OnReleaseGrab()
 void AInventoryItemMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector BaseMeshLocation = BaseMesh->GetComponentTransform().GetLocation();
+
+	FVector PromptLocation = BaseMeshLocation;
+	PromptLocation.Z += InventoryDataTableRow->ExaminationMesh_Offset;
+	if (!Player)
+	{
+		return;
+	}
+	Prompt->SetWorldLocation(PromptLocation,false,nullptr,ETeleportType::None);
+	if (UpdateActor)
+	{
+		FHitResult HitResult;
+		bool Trace = UKismetSystemLibrary::LineTraceSingle(this, GetActorLocation(), Player->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery13, false,
+			TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true);
+		if (Trace)
+		{
+			Prompt->SetVisibility(true);
+			FRotator PromptRotation = UKismetMathLibrary::FindLookAtRotation(Prompt->GetComponentLocation(), Player->GetActorLocation());
+			Prompt->SetWorldRotation(PromptRotation);
+			bool CanPickUp = UKismetMathLibrary::VSize(HitResult.TraceStart - HitResult.TraceEnd) <=PickUpDistance ? true : false;
+			if (Prompt->GetUserWidgetObject())
+			{
+				UPickUpPrompt* PickUpPrompt = Cast<UPickUpPrompt>(Prompt->GetUserWidgetObject());
+				if (PickUpPrompt)
+				{
+					PickUpPrompt->TogglePrompt(CanPickUp);
+				}
+			}
+			if (CanPickUp)
+			{
+				EnableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			}
+			else
+			{
+				DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			}
+		}
+		else
+		{
+			Prompt->SetVisibility(false);
+			DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		}
+	}
 
 }
 

@@ -16,8 +16,6 @@
 #include "Data/Item/ItemData.h"
 #include "Data/Item/InventoryItem.h"
 #include "Actors/Inventory/InventoryItemMaster.h"
-
-
 // Sets default values for this component's properties
 UInventory::UInventory()
 {
@@ -35,7 +33,7 @@ void UInventory::BeginPlay()
 	APawn* OwningPawn = Cast<APawn>(GetOwner());
 	PlayerRef = Cast<ACryptRiderCharacter>(OwningPawn);
 	check(PlayerRef);
-
+	
 	AController* Controller = OwningPawn->GetController();
 	PlayerControllerRef = Cast<ACryptRiderPlayerController>(Controller);
 	InventoryMenuWidgetRef = PlayerControllerRef->InventoryMenuWidget;
@@ -183,6 +181,7 @@ void UInventory::UseItem(int32 Index)
 
 void UInventory::DropItem(int32 Index)
 {
+	if (!PlayerRef) { return; }
 	UCameraComponent* PlayerCamera = PlayerRef->GetFirstPersonCameraComponent();
 	FVector CameraLocation = PlayerCamera->GetComponentLocation();
 	FVector CameraVector = PlayerCamera->GetForwardVector();

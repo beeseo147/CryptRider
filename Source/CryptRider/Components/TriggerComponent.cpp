@@ -45,10 +45,10 @@ void UTriggerComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 			Component->SetSimulatePhysics(false);
 		}
 		// Actor를 부모 컴포넌트에 부착합니다.
-		Actor->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Actor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 
 		// Actor의 월드 좌표계 기준 위치를 설정합니다.
-		Actor->SetActorRelativeLocation(FVector(), false);
+		Actor->SetActorRelativeLocation(FVector(0,0,0), false);
 
 		// Actor의 월드 좌표계 기준 회전을 설정합니다.
 		Actor->SetActorRotation(FRotator(this->GetComponentRotation()), ETeleportType::TeleportPhysics);

@@ -8,6 +8,8 @@
 #include "MotionControllerComponent.h"
 #include "Animation/VRHandAnimInstance.h"
 #include "HandGraph.h"
+#include "Components/WidgetComponent.h"
+#include "UI/VRInventoryMenuUserWidget.h"
 #include "VRCharacter.generated.h"
 
 static inline const FName Player = TEXT("Player");
@@ -22,10 +24,8 @@ class UHandGraph;
 class UCameraComponent;
 class UVRHandSkeletalMeshComponent;
 class UWidgetInteractionComponent;
-class UInventoryMenuUserWidget;
-class UMainMenu;
 class UExaminationWidget;
-
+class UVRInventory;
 UCLASS()
 class CRYPTRIDER_API AVRCharacter : public ACharacter
 {
@@ -49,6 +49,9 @@ public:
 
 protected:
 	void OnMove(const FInputActionValue& InputActionValue);
+	void InventoryOpen(const FInputActionValue& InputActionValue);
+	/** Called for Pick input */
+	void Pick(const FInputActionValue& InputActionValue);
 
 	void OnGrabLeftStarted(const FInputActionValue& InputActionValue) { OnGrabStarted(MotionControllerLeft, true, InputActionValue); }
 	void OnGrabRightStarted(const FInputActionValue& InputActionValue) { OnGrabStarted(MotionControllerRight, false, InputActionValue); }
@@ -87,6 +90,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UHandGraph* HandGraphRight;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UWidgetComponent* InventoryHUD = nullptr;
+
 protected:
 	UPROPERTY(Transient)
 	class UVRGrabber* LeftHandAttachedGrabComponent = nullptr;
@@ -94,16 +100,21 @@ protected:
 	UPROPERTY(Transient)
 	class UVRGrabber* RightHandAttachedGrabComponent = nullptr;
 
-//protected:
-//	UPROPERTY(BlueprintReadWrite)
-//	UMainMenu* UMainMenuWidget;
-//
-//	UPROPERTY(BlueprintReadWrite)
-//	UInventoryMenuUserWidget* InventoryMenuWidget;
-//
-//	UPROPERTY(BlueprintReadWrite)
-//	UExaminationWidget* ExaminationWidget;
-//
-//	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-//	bool IsInventoryOpen = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UVRInventory* VRInventoryComponents = nullptr;
+
+public:
+	UCameraComponent* GetVRCameraComponent() const { return VRCamera; }
+public:
+	/*UPROPERTY(BlueprintReadWrite)
+	UMainMenu* UMainMenuWidget;*/
+
+	UPROPERTY(BlueprintReadWrite)
+	UVRInventoryMenuUserWidget* InventoryMenuWidget;
+
+	UPROPERTY(BlueprintReadWrite)
+	UExaminationWidget* ExaminationWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bInventoryOpen = false;
 };
