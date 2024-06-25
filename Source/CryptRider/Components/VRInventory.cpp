@@ -63,7 +63,7 @@ void UVRInventory::DropItem(int32 Index)
 	}
 }
 
-bool UVRInventory::AddItem2(UPARAM(ref)FItemData& InItem)
+bool UVRInventory::AddItem(UPARAM(ref)FItemData& InItem)
 {
 	LocalItem = InItem;
 	LocalAmount = InItem.Amount;

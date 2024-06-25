@@ -10,6 +10,7 @@
 #include "HandGraph.h"
 #include "Components/WidgetComponent.h"
 #include "UI/VRInventoryMenuUserWidget.h"
+#include "Actors/Interface/PlayerInterFace.h"
 #include "VRCharacter.generated.h"
 
 static inline const FName Player = TEXT("Player");
@@ -27,7 +28,7 @@ class UWidgetInteractionComponent;
 class UExaminationWidget;
 class UVRInventory;
 UCLASS()
-class CRYPTRIDER_API AVRCharacter : public ACharacter
+class CRYPTRIDER_API AVRCharacter : public ACharacter, public IPlayerInterFace
 {
 	friend class UHandGraph;
 	GENERATED_BODY()
@@ -52,6 +53,8 @@ protected:
 	void InventoryOpen(const FInputActionValue& InputActionValue);
 	/** Called for Pick input */
 	void Pick(const FInputActionValue& InputActionValue);
+
+	void Interact(const FInputActionValue& InputActionValue);
 
 	void OnGrabLeftStarted(const FInputActionValue& InputActionValue) { OnGrabStarted(MotionControllerLeft, true, InputActionValue); }
 	void OnGrabRightStarted(const FInputActionValue& InputActionValue) { OnGrabStarted(MotionControllerRight, false, InputActionValue); }
@@ -114,6 +117,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	UExaminationWidget* ExaminationWidget;
+
+	
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bInventoryOpen = false;

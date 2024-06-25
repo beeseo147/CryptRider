@@ -212,19 +212,22 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	{
 		const UInputDataConfig* BasicInputDataConfig = GetDefault<UInputDataConfig>();
-		EnhancedInputComponent->BindAction(BasicInputDataConfig->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
-		EnhancedInputComponent->BindAction(BasicInputDataConfig->InventoryAction, ETriggerEvent::Started, this, &ThisClass::InventoryOpen);
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->MoveAction, ETriggerEvent::Triggered, this, &AVRCharacter::OnMove);
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->InventoryAction, ETriggerEvent::Started, this, &AVRCharacter::InventoryOpen);
 		
 		//Pick
-		EnhancedInputComponent->BindAction(BasicInputDataConfig->PickAction, ETriggerEvent::Started, this, &ThisClass::Pick);
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->PickAction, ETriggerEvent::Started, this, &AVRCharacter::Pick);
+
+		//Interact
+		EnhancedInputComponent->BindAction(BasicInputDataConfig->InteractAction, ETriggerEvent::Started, this, &AVRCharacter::Interact);
 	}
 	{
 		const UVRHandsInputDataConfig* VRHandsInputDataConfig = GetDefault<UVRHandsInputDataConfig>();
-		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Left, ETriggerEvent::Started, this, &ThisClass::OnGrabLeftStarted);
-		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Left, ETriggerEvent::Completed, this, &ThisClass::OnGrabLeftCompleted);
+		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Left, ETriggerEvent::Started, this, &AVRCharacter::OnGrabLeftStarted);
+		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Left, ETriggerEvent::Completed, this, &AVRCharacter::OnGrabLeftCompleted);
 
-		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Right, ETriggerEvent::Started, this, &ThisClass::OnGrabRightStarted);
-		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Right, ETriggerEvent::Completed, this, &ThisClass::OnGrabRightCompleted);
+		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Right, ETriggerEvent::Started, this, &AVRCharacter::OnGrabRightStarted);
+		EnhancedInputComponent->BindAction(VRHandsInputDataConfig->IA_Grab_Right, ETriggerEvent::Completed, this, &AVRCharacter::OnGrabRightCompleted);
 	}
 	{
 		HandGraphLeft->SetupPlayerInputComponent(MotionControllerLeft, EnhancedInputComponent);
@@ -355,4 +358,29 @@ void AVRCharacter::InventoryOpen(const FInputActionValue& InputActionValue)
 void AVRCharacter::Pick(const FInputActionValue& InputActionValue)
 {
 	
+}
+
+void AVRCharacter::Interact(const FInputActionValue& InputActionValue)
+{
+	UCameraComponent* PlayerCamera = GetVRCameraComponent();
+	FVector CameraLocation = PlayerCamera->GetComponentLocation();
+	FVector CameraVector = PlayerCamera->GetForwardVector();
+	FHitResult HitResult;
+	UKismetSystemLibrary::LineTraceSingle(PlayerCamera, CameraLocation, CameraLocation + CameraVector * 200,
+		ETraceTypeQuery::TraceTypeQuery13, false,
+		TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true);
+
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor)
+	{
+		FString MyString = HitActor->GetName();
+		UE_LOG(LogTemp, Display, TEXT("Now : %s"), *MyString);
+		bool bIsImplemented = HitActor->GetClass()->ImplementsInterface(UPlayerInterFace::StaticClass());
+		if (bIsImplemented)
+		{
+			// 인터페이스 함수 호출
+			IPlayerInterFace::Execute_ReactToTrigger(HitActor);
+		}
+	}
+
 }

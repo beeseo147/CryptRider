@@ -70,11 +70,11 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	bool AddItem(UPARAM(ref) FItemData&InItem);
+	virtual bool AddItem(UPARAM(ref) FItemData&InItem);
 	UFUNCTION(BlueprintCallable)
 	bool CheckFreeSlot(FItemData& InItem);
 	UFUNCTION(BlueprintCallable)
-	void UpdateInventorySlot(int32 Index);
+	virtual void UpdateInventorySlot(int32 Index);
 	UFUNCTION(BlueprintCallable)
 	void UseItem(int32 Index);
 	UFUNCTION(BlueprintCallable)

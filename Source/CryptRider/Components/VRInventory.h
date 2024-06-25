@@ -24,14 +24,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	class AVRCharacter* VRPlayerRef;
 
-	//UPROPERTY(BlueprintReadOnly)
-	//class UVRInventoryMenuUserWidget* VRInventoryMenuWidgetRef;
-
-
 	virtual void DropItem(int32 Index) override;
-	UFUNCTION(BlueprintCallable)
-	bool AddItem2(UPARAM(ref) FItemData& InItem);
-	//UFUNCTION()
-	void UpdateInventorySlot(int32 Index);
+	
+	virtual bool AddItem(UPARAM(ref) FItemData& InItem) override;
+
+	virtual void UpdateInventorySlot(int32 Index) override;
 protected:
 };
